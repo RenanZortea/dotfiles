@@ -1,0 +1,36 @@
+# -----------------------------------------------------
+# CONFIGURAÇÃO DOS PLUGINS (Instalados via Pacman)
+# -----------------------------------------------------
+
+# 1. zsh-completions (Para autocompletar com Tab)
+fpath+=(/usr/share/zsh/plugins/zsh-completions/src)
+autoload -U compinit && compinit
+
+# 2. zsh-autosuggestions (Sugestões em cinza)
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# 3. zsh-syntax-highlighting (Colorir comandos)
+# IMPORTANTE: Esta deve ser a ÚLTIMA linha de plugin a ser carregada
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+
+# -----------------------------------------------------
+# Prompt (Oh My Posh)
+# -----------------------------------------------------
+# Isto só funciona após 'sudo pacman -S oh-my-posh'
+eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/EDM115-newline.omp.json)"
+
+
+# -----------------------------------------------------
+# FZF (Busca no histórico com CTRL+R)
+# -----------------------------------------------------
+# Isto só funciona após 'sudo pacman -S fzf'
+source <(fzf --zsh)
+
+# -----------------------------------------------------
+# Configuração do Histórico
+# -----------------------------------------------------
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
