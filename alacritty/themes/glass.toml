@@ -1,0 +1,32 @@
+## Glass / Cyber Ice Theme
+#    [colors.primary]
+#    background = "#0b0f19"
+#    foreground = "#cbf7ff"  # Icy light blue text
+#
+#    [colors.cursor]
+#    text = "#0b0f19"
+#    cursor = "#00f3ff"      # Neon Cyan cursor
+#
+#    [colors.selection]
+#    text = "#00f3ff"
+#    background = "#1c2a42"
+#
+#    [colors.normal]
+#    black   = "#151a25"
+#    red     = "#ff3333"
+#    green   = "#00d47e"
+#    yellow  = "#ffcc00"
+#    blue    = "#00aaff"
+#    magenta = "#d400ff"
+#    cyan    = "#00e5ff"
+#    white   = "#e0f0f5"
+#
+#    [colors.bright]
+#    black   = "#323c4d"
+#    red     = "#ff6666"
+#    green   = "#33ff99"
+#    yellow  = "#ffe600"
+#    blue    = "#4db8ff"
+#    magenta = "#e066ff"
+#    cyan    = "#80f2ff"
+#    white   = "#ffffff"

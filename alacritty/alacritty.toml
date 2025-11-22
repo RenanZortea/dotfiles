@@ -1,0 +1,22 @@
+[general]
+import = [
+    "~/.config/alacritty/themes/glass.toml",
+    "~/.config/alacritty/colors-matugen.toml"
+]
+
+[window]
+# 0.0 is invisible, 1.0 is solid.
+# 0.5 - 0.7 is the sweet spot for readability + glass effect.
+opacity = 0.6 
+
+# Adds some padding so text doesn't touch the window edges
+padding = { x = 15, y = 15 }
+
+# Removes the title bar (looks cleaner for glass themes)
+decorations = "None"
+
+# --- IMPORTANT NOTE ON BLUR ---
+# Alacritty DOES NOT blur the background by itself on most Linux systems.
+# If you want the "frosted" look (blur), your Window Manager must do it.
+# If you are on macOS or KDE, you can try enabling this:
+blur = true
