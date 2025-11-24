@@ -3,6 +3,7 @@
 
 # 2. Allow gitignore itself (so it gets versioned)
 !/.gitignore
+!/README.md
 # --- Whitelist (Allow these folders) ---
 # Remove trailing slashes to catch both folders and symlinks
 !/alacritty
