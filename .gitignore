@@ -1,0 +1,33 @@
+# 1. First, ignore EVERYTHING in this directory
+/*
+
+# 2. Allow gitignore itself (so it gets versioned)
+!/.gitignore
+# --- Whitelist (Allow these folders) ---
+# Remove trailing slashes to catch both folders and symlinks
+!/alacritty
+!/bottom
+!/btop
+!/dunst
+!/fastfetch
+!/ghostty
+!/gtk-3.0
+!/gtk-4.0
+!/hypr
+!/kitty
+!/matugen
+!/ml4w
+!/nvim
+!/ohmyposh
+!/rofi
+!/swaync
+!/tmux
+!/waybar
+!/wlogout
+!/wallust
+
+# Specific files
+!/bashrc
+!/zshrc
+!/mimeapps.list
+!/user-dirs.dirs
