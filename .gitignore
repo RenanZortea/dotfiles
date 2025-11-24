@@ -1,0 +1,37 @@
+# 1. First, ignore EVERYTHING in this directory
+/*
+
+# 2. Allow gitignore itself (so it gets versioned)
+!/.gitignore
+
+# 3. WHITELIST: Only allow the tools you actually want to configure.
+# Based on your 'ls' output, these seem to be the ones you care about:
+
+!/alacritty/
+!/bottom/
+!/btop/
+!/dunst/
+!/fastfetch/
+!/ghostty/
+!/gtk-3.0/
+!/gtk-4.0/
+!/hypr/
+!/kitty/
+!/matugen/
+!/ml4w/
+!/nvim/
+!/ohmyposh/
+!/rofi/
+!/swaync/
+!/tmux/
+!/waybar/
+!/wlogout/
+!/wallust/
+
+# Specific files (if you really keep them in .config and not ~)
+!/bashrc
+!/zshrc
+!/mimeapps.list
+!/user-dirs.dirs
+
+tmux/plugins/
