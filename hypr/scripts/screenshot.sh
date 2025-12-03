@@ -95,7 +95,7 @@ edit='Edit'
 
 # Rofi CMD
 rofi_cmd() {
-    rofi -dmenu -replace -config ~/.config/rofi/config-screenshot.rasi -i -no-show-icons -l 2 -width 30 -p "Take screenshot"
+    rofi -theme ~/.config/rofi/launchers/type-4/style-1.rasi -dmenu -replace -config ~/.config/rofi/config-screenshot.rasi -i -no-show-icons -l 2 -width 30 -p "Take screenshot"
 }
 
 # Pass variables to rofi dmenu
@@ -254,10 +254,10 @@ run_cmd() {
 # Actions
 chosen="$(run_rofi)"
 case ${chosen} in
-    $option_1)
-        run_cmd --opt1
-        ;;
-    $option_2)
-        run_cmd --opt2
-        ;;
+$option_1)
+    run_cmd --opt1
+    ;;
+$option_2)
+    run_cmd --opt2
+    ;;
 esac

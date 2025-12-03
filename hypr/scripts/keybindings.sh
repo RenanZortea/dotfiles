@@ -8,7 +8,7 @@
 #
 # -----------------------------------------------------
 # Get keybindings location based on variation
-# -----------------------------------------------------
+
 config_file=$(<~/.config/hypr/conf/keybinding.conf)
 config_file=${config_file//source = ~//home/$USER}
 
@@ -35,4 +35,7 @@ keybinds=$(awk -F'[=#]' '
 ' "$config_file")
 
 sleep 0.2
-rofi -dmenu -i -markup -eh 2 -replace -p "Keybinds" -config ~/.config/rofi/config-compact.rasi <<<"$keybinds"
+
+# --- THE CHANGE IS HERE ---
+# Using your new Tech/Glass theme
+rofi -dmenu -i -markup -eh 2 -replace -p "Keybinds" -theme ~/.config/rofi/launchers/type-4/style-1.rasi ----------------------------------------------------- <<<"$keybinds"#

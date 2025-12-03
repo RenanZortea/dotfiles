@@ -9,7 +9,7 @@ return {
 
 		-- Useful status updates for LSP.
 		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-		{ "j-hui/fidget.nvim", opts = {} },
+		{ "j-hui/fidget.nvim",       opts = {} },
 
 		-- Allows extra capabilities provided by nvim-cmp
 		"hrsh7th/cmp-nvim-lsp",
@@ -152,16 +152,39 @@ return {
 		--  - settings (table): Override the default settings passed when initializing the server.
 		--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 		local servers = {
-			-- clangd = {},
-			-- gopls = {},
-			-- pyright = {},
-			rust_analyzer = {},
-			-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-			--
-			-- Some languages (like typescript) have entire language plugins that can be useful:
-			--    https://github.com/pmizio/typescript-tools.nvim
-			--
-			-- But for many setups, the LSP (`tsserver`) will work just fine
+			-- C/C++ Configuration (Clangd)
+			clangd = {
+				cmd = {
+					"clangd",
+					"--background-index", -- Index project in background
+					"--clang-tidy", -- Enable linting
+					"--header-insertion=iwyu", -- Auto-import headers (Include-What-You-Use)
+					"--completion-style=detailed", -- Better completion menu
+					"--function-arg-placeholders", -- Autocomplete function args
+					"--fallback-style=llvm", -- Default formatting style
+				},
+				init_options = {
+					usePlaceholders = true,
+					completeUnimported = true,
+					clangdFileStatus = true,
+				},
+			},
+
+			-- Rust Configuration
+			rust_analyzer = {
+				settings = {
+					["rust-analyzer"] = {
+						lru = {
+							capacity = 16,
+						},
+						cargo = {
+							allFeatures = true,
+						},
+					},
+				},
+			},
+
+			-- Other Servers
 			ts_ls = {}, -- tsserver is deprecated
 			ruff = {},
 			pylsp = {
@@ -243,5 +266,29 @@ return {
 				end,
 			},
 		})
+
+		-- Toggle LSP on/off (Corrected to handle C and Rust)
+		vim.keymap.set("n", "<leader>lo", function()
+			-- Get ALL clients
+			local clients = vim.lsp.get_clients()
+			local killed = false
+
+			for _, client in ipairs(clients) do
+				-- Check for Rust OR Clangd
+				if client.name == "rust_analyzer" or client.name == "rust-analyzer" or client.name == "clangd" then
+					vim.lsp.stop_client(client.id, true)
+					killed = true
+				end
+			end
+
+			if killed then
+				-- Clear the red error text (diagnostics) for the current buffer immediately
+				vim.diagnostic.reset(nil, 0)
+				print("💀 Heavy LSPs (Rust/C) Stopped")
+			else
+				vim.cmd("LspStart")
+				print("🟢 LSPs Started")
+			end
+		end, { desc = "Toggle Heavy LSPs (Rust/C)" })
 	end,
 }
