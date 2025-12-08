@@ -48,5 +48,11 @@
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
 
-theme = GitHub Dark
-custom-shader = ~/.config/ghostty/shaders/shader.glsl
+# theme = GitHub Dark
+# custom-shader = ~/.config/ghostty/shaders/shader.glsl
+
+theme = 12-bit Rainbow 
+font-family = "Terminus"
+
+# cursor-style = block
+# cursor-style-blink = true
