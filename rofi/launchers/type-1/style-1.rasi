@@ -1,0 +1,124 @@
+/**
+ * ROFI Tech & Glass - LIVE CONFIG
+ **/
+
+configuration {
+    modi: "drun,run";
+    show-icons: true;
+    display-drun: "APPS";
+    display-run: "CMD";
+    display-filebrowser: "FILES";
+    display-window: "WIN";
+    drun-display-format: "{name}";
+    window-format: "{w} · {c} · {t}";
+}
+
+/* --- MATUGEN LINK --- */
+/* Ensure this file exists! If not, run 'matugen image ...' */
+@import "~/.config/rofi/colors.rasi"
+@import "shared/fonts.rasi"
+
+* {
+    /* Manual mapping to ensure it works even if Matugen varies */
+    border-colour:               var(selected);
+    background-colour:           var(background); /* Must have alpha/transparency in colors.rasi */
+    foreground-colour:           var(foreground);
+    alternate-background:        var(background-alt);
+    selected-normal-background:  var(selected);
+    selected-normal-foreground:  var(background);
+}
+
+window {
+    /* GLASS EFFECT */
+    transparency: "real";
+    location: center;
+    anchor: center;
+    fullscreen: false;
+    width: 800px;
+    
+    /* TECH BORDERS */
+    border: 2px solid;
+    border-radius: 0px;
+    border-color: @border-colour;
+    
+    background-color: @background-colour;
+}
+
+mainbox {
+    enabled: true;
+    spacing: 20px;
+    padding: 30px;
+    background-color: transparent;
+    children: [ "inputbar", "listview" ];
+}
+
+inputbar {
+    enabled: true;
+    spacing: 10px;
+    padding: 0px 0px 15px 0px;
+    border: 0px 0px 2px 0px; /* Underline */
+    border-color: @border-colour;
+    background-color: transparent;
+    text-color: @foreground-colour;
+    children: [ "prompt", "entry" ];
+}
+
+prompt {
+    enabled: true;
+    background-color: @selected-normal-background;
+    text-color: @selected-normal-foreground;
+    padding: 10px 15px;
+}
+
+entry {
+    enabled: true;
+    background-color: transparent;
+    text-color: inherit;
+    cursor: text;
+    placeholder: "Search...";
+    padding: 10px;
+}
+
+listview {
+    enabled: true;
+    columns: 1;
+    lines: 8;
+    cycle: true;
+    dynamic: true;
+    scrollbar: false;
+    layout: vertical;
+    fixed-height: true;
+    fixed-columns: true;
+    spacing: 10px;
+    padding: 10px 0px 0px 0px;
+    background-color: transparent;
+    text-color: @foreground-colour;
+}
+
+element {
+    enabled: true;
+    spacing: 15px;
+    padding: 12px;
+    background-color: transparent;
+    text-color: @foreground-colour;
+    cursor: pointer;
+}
+
+element selected.normal {
+    background-color: @alternate-background;
+    text-color: @foreground-colour;
+    border: 0px 0px 0px 4px solid;
+    border-color: @selected-normal-background;
+}
+
+element-icon {
+    background-color: transparent;
+    text-color: inherit;
+    size: 32px;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    vertical-align: 0.5;
+}
