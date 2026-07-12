@@ -12,20 +12,9 @@ return {
 						border = "rounded",
 					},
 				},
-				-- LSP Server Configuration
-				server = {
-					on_attach = function(client, bufnr)
-						-- This enables "Format on Save" specifically for Rust
-						if client.server_capabilities.documentFormattingProvider then
-							vim.api.nvim_create_autocmd("BufWritePre", {
-								buffer = bufnr,
-								callback = function()
-									vim.lsp.buf.format({ async = false })
-								end,
-							})
-						end
-					end,
-				},
+				-- Format on save is handled by conform.nvim (plugins/conform.lua),
+				-- which routes rust -> rustfmt for every buffer, not just the ones
+				-- a particular client happens to attach to.
 			}
 
 			-- 2. Define the Custom Tools Menu

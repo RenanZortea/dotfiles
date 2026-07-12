@@ -41,6 +41,7 @@ require("lazy").setup({
 	require("plugins.undotree"),
 	require("plugins.auto-session"),
 	require("plugins.which-key"),
+	require("plugins.conform"),
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
