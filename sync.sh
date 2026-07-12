@@ -28,7 +28,7 @@ fi
 # left alone rather than deleted -- alacritty, dunst, ghostty, wal and wallust
 # only exist in this repo.
 mapfile -t ENTRIES < <(git ls-tree --name-only HEAD |
-    grep -vE '^(README\.md|\.gitignore|sync\.sh|hooks)$')
+    grep -vE '^(README\.md|\.gitignore|sync\.sh|restore\.sh|hooks)$')
 
 # We copy through symlinks, so a link inside a synced directory drags its target
 # into a public repo. Only targets we already sync are acceptable. Note that the
