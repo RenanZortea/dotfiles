@@ -1,0 +1,12 @@
+[Unit]
+Description=restic backup of $HOME to /mnt/d
+# Don't fail noisily when the HDD isn't mounted; just don't run.
+ConditionPathIsMountPoint=/mnt/d
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/restic/backup.sh backup
+
+# Backups should never fight the desktop for I/O or CPU.
+Nice=10
+IOSchedulingClass=idle

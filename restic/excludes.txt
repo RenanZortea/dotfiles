@@ -1,0 +1,48 @@
+# Things that can be regenerated or re-downloaded. Everything else in $HOME is
+# backed up, so the default is "keep it" -- only add a line here when you are
+# sure the data can be rebuilt from something else you still have.
+
+# Caches
+/home/renan/.cache
+**/Cache
+**/CachedData
+**/GPUCache
+**/Code Cache
+**/ShaderCache
+
+# Container images: rebuildable from Containerfiles (32G)
+/home/renan/.local/share/containers
+
+# Electron app data. Claude alone is 13G of cache, not config.
+/home/renan/.config/Claude
+/home/renan/.config/discord
+/home/renan/.config/google-chrome/*/Service Worker
+
+# Games: re-downloadable (8.6G)
+/home/renan/.local/share/Steam
+
+# Toolchain and package caches: all rebuildable from lockfiles / rustup
+/home/renan/.rustup
+/home/renan/.cargo/registry
+/home/renan/.npm
+/home/renan/.local/share/pnpm/store
+
+# nvim plugins: lazy.nvim restores these exactly from the committed lazy-lock.json
+/home/renan/.local/share/nvim/lazy
+/home/renan/.local/share/nvim/mason
+
+# Build output
+**/node_modules
+**/.next
+**/dist
+**/__pycache__
+**/.venv
+**/.pytest_cache
+
+# Cargo target/ dirs are skipped by the --exclude-caches flag in backup.sh:
+# cargo drops a CACHEDIR.TAG in them, and restic honours that standard. Doing it
+# that way avoids blanket-excluding any directory that happens to be named
+# "target".
+
+/home/renan/.local/share/Trash
+/home/renan/.var/app/*/cache

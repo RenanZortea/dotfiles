@@ -1,0 +1,24 @@
+[Unit]
+Description=MilyonBot Discord bot stack (podman-compose: postgres + bot)
+Documentation=https://github.com/ (personal project)
+# Keep trying to reach a network before bringing the stack up at boot; harmless
+# in the user manager where the target may be absent (best-effort ordering).
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+# Detached bring-up: `podman-compose up -d` is idempotent (no-op if already
+# running, so enabling this doesn't disrupt the live bot). Per-container crash
+# recovery is handled by `restart: unless-stopped` in docker-compose.yml, which
+# podman's runtime enforces independently of this unit; systemd's job is just to
+# start the stack on boot and tear it down on shutdown.
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=%h/Projects/MilyonBot
+ExecStart=/usr/bin/podman-compose up -d
+ExecStop=/usr/bin/podman-compose down
+# First boot after a rebuild may (re)pull/build images; give it room.
+TimeoutStartSec=600
+
+[Install]
+WantedBy=default.target

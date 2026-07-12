@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily restic backup
+
+[Timer]
+OnCalendar=daily
+# If the machine was off at the scheduled time, run once it comes back up.
+Persistent=true
+# Don't all fire at exactly midnight.
+RandomizedDelaySec=30m
+
+[Install]
+WantedBy=timers.target

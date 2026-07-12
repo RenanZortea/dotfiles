@@ -14,6 +14,8 @@
 !/btop
 !/dunst
 !/fastfetch
+!/systemd
+!/restic
 !/git
 !/ghostty
 !/gtk-3.0
