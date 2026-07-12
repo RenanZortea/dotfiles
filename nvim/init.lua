@@ -39,6 +39,7 @@ require("lazy").setup({
 	require("plugins.plenary"),
 	require("plugins.begood"),
 	require("plugins.undotree"),
+	require("plugins.auto-session"),
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
