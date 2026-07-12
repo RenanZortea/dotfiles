@@ -32,3 +32,6 @@
 !/zshrc
 !/mimeapps.list
 !/user-dirs.dirs
+
+# tpm installs these; do not vendor them
+/tmux/plugins/
