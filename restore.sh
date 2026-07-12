@@ -74,6 +74,24 @@ for name in "${ENTRIES[@]}"; do
 done
 
 echo
+echo "== rust-analyzer =="
+# Arch's rustup package only drops proxies for cargo/rustc into /usr/bin, so
+# `rustup component add rust-analyzer` installs the binary but leaves nothing on
+# PATH -- rustaceanvim then loads with no server behind it. Symlinking to rustup
+# (rather than to the toolchain binary) keeps it following the active toolchain.
+if ! command -v rustup >/dev/null; then
+    echo "  rustup not installed, skipping"
+elif command -v rust-analyzer >/dev/null; then
+    echo "  already on PATH"
+elif [ "$APPLY" -eq 1 ]; then
+    mkdir -p "$HOME/.local/bin"
+    ln -sfn "$(command -v rustup)" "$HOME/.local/bin/rust-analyzer"
+    echo "  proxied into ~/.local/bin"
+else
+    echo "  would proxy rustup into ~/.local/bin/rust-analyzer"
+fi
+
+echo
 echo "== tmux plugins =="
 TPM="$CONFIG/tmux/plugins/tpm"
 if [ -d "$TPM" ]; then
