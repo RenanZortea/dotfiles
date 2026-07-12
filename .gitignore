@@ -5,6 +5,7 @@
 !/.gitignore
 !/README.md
 !/sync.sh
+!/restore.sh
 !/hooks
 # --- Whitelist (Allow these folders) ---
 # Remove trailing slashes to catch both folders and symlinks
