@@ -51,6 +51,10 @@ hl.on("hyprland.start", function ()
     -- Load cliphist history
     hl.exec_cmd("wl-paste --watch cliphist store")
 
+    -- KeePassXC in the tray. It has to be running and unlocked for the browser
+    -- extension to work; there is no headless daemon for that.
+    hl.exec_cmd("keepassxc --minimized")
+
     -- Start autostart cleanup
     hl.exec_cmd("~/.config/hypr/scripts/cleanup.sh")
 end)
