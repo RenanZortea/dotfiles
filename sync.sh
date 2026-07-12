@@ -2,12 +2,12 @@
 #
 # Pull the live configs out of ~/.config and into this repo.
 #
-#   ./sync.sh                    sync + show what changed (no commit)
+#   ./sync.sh                    sync + show what changed (nothing is staged)
 #   ./sync.sh "commit message"   sync, commit, push
 #
 # Most of ~/.config is symlinked into ML4W's tree, so we copy through the links
-# (rsync -L) and store real files. Committing the symlinks themselves would store
-# link text and no content -- that is what broke the old `main` branch.
+# and store real files. Committing the symlinks themselves would store link text
+# and no content -- that is what left the old `main` branch empty.
 
 set -euo pipefail
 
@@ -17,10 +17,49 @@ MSG="${1:-}"
 
 cd "$REPO"
 
-# Anything already tracked, plus the .gitignore whitelist. A directory that
-# exists in the repo but not in ~/.config is left alone rather than deleted --
-# alacritty, dunst, ghostty, tmux, wal and wallust only exist here.
-mapfile -t ENTRIES < <(git ls-tree --name-only HEAD | grep -vE '^(README\.md|\.gitignore|sync\.sh)$')
+# The credential check lives in .git/hooks/pre-commit so that a plain `git
+# commit` cannot skip it. Hooks are not cloned, so install it if it is missing.
+if [ ! -x "$REPO/.git/hooks/pre-commit" ]; then
+    install -m 755 "$REPO/hooks/pre-commit" "$REPO/.git/hooks/pre-commit"
+    echo "installed pre-commit credential check"
+fi
+
+# Anything already tracked. A directory that exists here but not in ~/.config is
+# left alone rather than deleted -- alacritty, dunst, ghostty, wal and wallust
+# only exist in this repo.
+mapfile -t ENTRIES < <(git ls-tree --name-only HEAD |
+    grep -vE '^(README\.md|\.gitignore|sync\.sh|hooks)$')
+
+# We copy through symlinks, so a link inside a synced directory drags its target
+# into a public repo. Only targets we already sync are acceptable. Note that the
+# rest of ~/.config is NOT acceptable: gh/hosts.yml, Claude/, discord/ and others
+# hold live credentials, and a link into one of them would quietly publish it.
+ALLOWED=("$HOME/.mydotfiles")
+for name in "${ENTRIES[@]}"; do ALLOWED+=("$CONFIG/$name"); done
+
+escaped=0
+for name in "${ENTRIES[@]}"; do
+    src="$CONFIG/$name"
+    [ -d "$src" ] || continue
+    while IFS= read -r link; do
+        target="$(readlink -f "$link" 2>/dev/null || true)"
+        ok=0
+        for root in "${ALLOWED[@]}"; do
+            case "$target" in "$root" | "$root"/*) ok=1; break ;; esac
+        done
+        if [ "$ok" -eq 0 ]; then
+            echo "  $link -> ${target:-<broken>}"
+            escaped=1
+        fi
+    done < <(find -P "$src/" -type l 2>/dev/null)
+done
+if [ "$escaped" -eq 1 ]; then
+    echo
+    echo "ABORT: the symlinks above point outside what this repo syncs, and"
+    echo "syncing follows them -- that is how a credential ends up published."
+    echo "Repoint them, or add an --exclude for them."
+    exit 1
+fi
 
 synced=() skipped=()
 for name in "${ENTRIES[@]}"; do
@@ -43,36 +82,31 @@ done
 printf 'synced %d from ~/.config\n' "${#synced[@]}"
 [ ${#skipped[@]} -gt 0 ] && printf 'left alone (not on this machine): %s\n' "${skipped[*]}"
 
-git add -A
-
-if git diff --cached --quiet; then
+if [ -z "$(git status --porcelain)" ]; then
     echo "nothing changed."
     exit 0
 fi
 
-# This repo is public and ~/.config is full of live credentials. Never let one
-# through, even if a whitelist rule changes by accident.
 echo
-echo "checking for secrets..."
-if git diff --cached | grep -inE 'gho_[A-Za-z0-9]{8}|ghp_[A-Za-z0-9]{8}|sk-[A-Za-z0-9]{16}|BEGIN [A-Z ]*PRIVATE KEY|oauth_token'; then
-    echo
-    echo "ABORT: that looks like a credential. Nothing was committed."
-    git reset -q
-    exit 1
-fi
-echo "clean."
+git -c color.ui=always status --short | head -25
 
-echo
-git diff --cached --stat | tail -20
-
+# Nothing is staged unless we are actually committing, so there is never a pile
+# of staged-but-unscanned files sitting around for a later `git commit` to pick up.
 if [ -z "$MSG" ]; then
     echo
-    echo "staged but not committed. Re-run with a message to push:"
+    echo "not staged. Re-run with a message to commit and push:"
     echo "  ./sync.sh \"what changed\""
     exit 0
 fi
 
-git commit -qm "$MSG"
+git add -A
+# The pre-commit hook scans for credentials here. If it refuses, unstage
+# everything -- otherwise the rejected files sit staged and a later `git commit`
+# would sweep them in without the hook ever looking at them again.
+if ! git commit -qm "$MSG"; then
+    git reset -q
+    exit 1
+fi
 git push -q origin main
 echo
 echo "pushed: $(git log --oneline -1)"

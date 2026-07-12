@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#
+# Refuse to commit anything that looks like a credential.
+#
+# This repo is public and its contents are copied out of ~/.config, which holds
+# live tokens. sync.sh runs the same check, but the check lives here too so that
+# a plain `git commit` cannot skip it.
+#
+# Scans staged file *contents*, not the diff: `git diff` prints no body for
+# files git considers binary, so a diff-only scan is blind to them.
+
+set -uo pipefail
+
+PATTERNS='gho_[A-Za-z0-9]{8}|ghp_[A-Za-z0-9]{8}|ghu_[A-Za-z0-9]{8}|ghs_[A-Za-z0-9]{8}|github_pat_[A-Za-z0-9_]{20}|AKIA[0-9A-Z]{12}|aws_secret_access_key|xox[baprs]-[A-Za-z0-9-]{10}|glpat-[A-Za-z0-9_-]{15}|AIza[0-9A-Za-z_-]{30}|sk-[A-Za-z0-9-]{20}|BEGIN [A-Z ]*PRIVATE KEY|oauth_token|client_secret'
+
+found=0
+while IFS= read -r -d '' f; do
+    # This file lists the patterns it hunts for, so it always matches itself.
+    [ "$f" = "hooks/pre-commit" ] && continue
+
+    # -a: treat binaries as text, so blobs are searched too.
+    if git show ":$f" 2>/dev/null | grep -aiqE "$PATTERNS"; then
+        echo "  $f"
+        found=1
+    fi
+done < <(git diff --cached --name-only -z --diff-filter=ACM)
+
+if [ "$found" -eq 1 ]; then
+    cat >&2 <<'EOF'
+
+BLOCKED: the staged files above look like they contain a credential.
+
+This repo is public. If it is a false positive, commit with --no-verify.
+EOF
+    exit 1
+fi
+exit 0
