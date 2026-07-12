@@ -1,3 +1,1 @@
-# alacritty
-# kitty
-ghostty
+kitty

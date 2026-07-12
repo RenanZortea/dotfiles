@@ -1,1 +1,2 @@
-nvim
+#!/bin/bash
+gnome-text-editor "$@"

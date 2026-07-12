@@ -59,17 +59,9 @@
     // Cliphist
     "custom/cliphist": {
         "format": "",
-        "on-click": "sleep 0.1 && ~/.config/ml4w/scripts/cliphist.sh",
-        "on-click-right": "sleep 0.1 && ~/.config/ml4w/scripts/cliphist.sh d",
-        "on-click-middle": "sleep 0.1 && ~/.config/ml4w/scripts/cliphist.sh w",
-        "tooltip": false
-    },
-
-    // Hyprshade
-    "custom/hyprshade": {
-        "format": "",
-        "on-click": "sleep 0.1; ~/.config/hypr/scripts/hyprshade.sh",
-        "on-click-right": "sleep 0.1; ~/.config/hypr/scripts/hyprshade.sh rofi",
+        "on-click": "sleep 0.1 && ~/.config/ml4w/scripts/ml4w-cliphist",
+        "on-click-right": "sleep 0.1 && ~/.config/ml4w/scripts/ml4w-cliphist d",
+        "on-click-middle": "sleep 0.1 && ~/.config/ml4w/scripts/ml4w-cliphist w",
         "tooltip": false
     },
 
@@ -91,9 +83,9 @@
         "tooltip-format": "{}",
         "escape": true,
         "return-type": "json",
-        "exec": "~/.config/ml4w/scripts/updates.sh",
+        "exec": "~/.config/ml4w/scripts/ml4w-check-system-updates",
         "restart-interval": 60,
-        "on-click": "alacritty -e ~/.config/ml4w/scripts/installupdates.sh",
+        "on-click": "~/.config/ml4w/settings/installupdates.sh",
         "tooltip": false
     },
 
@@ -121,7 +113,7 @@
     // Settings
     "custom/settings": {
         "format": "",
-        "on-click": "~/.config/ml4w/apps/ML4W_Dotfiles_Settings-x86_64.AppImage",
+        "on-click": "flatpak run com.ml4w.settings",
         "tooltip": false
     },
 
@@ -148,8 +140,8 @@
 
     // ML4W Welcome App
     "custom/ml4w-welcome": {
-        "on-click": "sleep 0.1 && ~/.config/ml4w/settings/ml4w-sidebar.sh",
-        "on-click-right": "sleep 0.1 && com.ml4w.welcome",
+        "on-click": "flatpak run com.ml4w.sidebar",
+        "on-click-right": "flatpak run com.ml4w.welcome",
         "format": " ",
         "tooltip-format": "Open Sidebar"
     },
@@ -172,7 +164,7 @@
     // Power Menu
     "custom/exit": {
         "format": "",
-        "on-click": "wlogout",
+        "on-click": "qs ipc call power toggle",
         "tooltip": false
     },
 
@@ -196,7 +188,7 @@
     // Clock
     "clock": {
         "format": "{:%H:%M %a}",
-        "on-click": "ags -t calendar",
+        "on-click": "flatpak run com.ml4w.calendar",
         "tooltip": false
     },
 
@@ -292,10 +284,10 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon}   {capacity}%",
-        "format-charging": "  {capacity}%",
-        "format-plugged": "  {capacity}%",
-        "format-alt": "{icon}  {time}",
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{icon} {time}",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
         "format-icons": [" ", " ", " ", " ", " "]

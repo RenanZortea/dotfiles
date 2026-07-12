@@ -8,29 +8,20 @@
 {
   // Workspaces
   "hyprland/workspaces": {
-    "on-scroll-up": "hyprctl dispatch workspace r-1",
-    "on-scroll-down": "hyprctl dispatch workspace r+1",
+    "on-scroll-down": "hyprctl dispatch \"hl.dsp.focus({workspace = 'e+1'})\"",
+    "on-scroll-up":   "hyprctl dispatch \"hl.dsp.focus({workspace = 'e-1'})\"",
     "on-click": "activate",
-    "active-only": true,
+    "active-only": false,
     "all-outputs": true,
     "format": "{}",
     "format-icons": {
       "urgent": "",
       "active": "",
       "default": ""
+    },
+    "persistent-workspaces": {
+      "*": 5
     }
-    //     "persistent-workspaces": {
-    //       "1": [],
-    //       "2": [],
-    //       "3": [],
-    //       "4": [],
-    //       "5": [],
-    //       "6": [],
-    //       "7": [],
-    //       "8": [],
-    //       "9": [],
-    //       "10": []
-    //     }
   },
   // Taskbar
   "wlr/taskbar": {
@@ -64,11 +55,12 @@
     "separate-outputs": true
   },
   // ML4W Welcome App
-  // "custom/ml4w-welcome": {
-  //   "on-click": "flatpak run com.ml4w.sidebar",
-  //   "format": " ",
-  //   "tooltip-format": "Open ML4W Sidebar App"
-  // },
+  "custom/ml4w-welcome": {
+    "on-click": "qs ipc call sidebar toggle",
+    "on-click-right": "qs ipc call welcome toggle",
+    "format": " ",
+    "tooltip-format": "Left: Open ML4W Sidebar\nRight: Open ML4W Welcome App"
+  },
   // Empty
   "custom/empty": {
     "format": ""
@@ -76,22 +68,68 @@
   // Tools
   "custom/tools": {
     "format": "",
-    "tooltip-format": "Tools"
+    "tooltip-format": "Tools",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
+
+  // Now Playing
+  "custom/nowplaying": {
+    "exec": "~/.config/ml4w/scripts/ml4w-now-playing",
+    "format": "  {text}",
+    "return-type": "json",
+    "interval": 1,
+    "escape": true,
+    "hide-empty-text": false,
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous",
+    "tooltip-format": "Left: Play/Pause\nRight: Next\nMiddle: Previous"
+  },
+
+  // Spotify / Media Player
+  "mpris": {
+    "format": "{player_icon} {dynamic}",
+    "format-paused": "{status_icon} <i>{dynamic}</i>",
+    "player-icons": {
+      "default": "▶",
+      "spotify": "",
+      "mpv": "🎵",
+      "firefox": "",
+      "chromium": "",
+      "brave": "🦁"
+    },
+    "status-icons": {
+      "paused": "⏸"
+    },
+    "max-length": 33,
+    "interval": 1,
+    // CONTROLS
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click-middle": "playerctl previous",
+    // SCROLL TO SWITCH PLAYERS (Requires playerctld)
+    "on-scroll-up": "playerctld shift",
+    "on-scroll-down": "playerctld unshift",
+    "tooltip-format": "{player} ({status})\nArtist: {artist}\nAlbum: {album}\nTitle: {title}"
+  },
+
   // Cliphist
   "custom/cliphist": {
     "format": "",
-    "on-click": "sleep 0.1 && ~/.config/ml4w/scripts/cliphist.sh",
-    "on-click-right": "sleep 0.1 && ~/.config/ml4w/scripts/cliphist.sh d",
-    "on-click-middle": "sleep 0.1 && ~/.config/ml4w/scripts/cliphist.sh w",
-    "tooltip-format": "Left: Open clipboard Manager\nRight: Delete an entry\nMiddle: Clear list"
+    "on-click": "sleep 0.1 && ~/.config/ml4w/scripts/ml4w-cliphist",
+    "on-click-right": "sleep 0.1 && ~/.config/ml4w/scripts/ml4w-cliphist d",
+    "on-click-middle": "sleep 0.1 && ~/.config/ml4w/scripts/ml4w-cliphist w",
+    "tooltip-format": "Left: Open clipboard Manager\nRight: Delete an entry\nMiddle: Clear list",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // Updates Count
   "custom/updates": {
     "format": "  {}",
     "escape": true,
     "return-type": "json",
-    "exec": "~/.config/ml4w/scripts/updates.sh",
+    "exec": "~/.config/ml4w/scripts/ml4w-check-system-updates",
     "interval": 1800,
     "signal": 1,
     "hide-empty-text": true,
@@ -115,7 +153,7 @@
   "custom/settings": {
     "format": "",
     "on-click": "sleep 0.1 && com.ml4w.dotfilessettings",
-    "tooltip-format": "ML4W Dotfiles Settings"
+    "tooltip-format": "ML4W Settings"
   },
   // Keybindings
   "custom/keybindings": {
@@ -124,56 +162,23 @@
     "tooltip": false
   },
   // Calculator
-  // "custom/calculator": {
-  //   "format": "",
-  //   "on-click": "qalculate-gtk",
-  //   "tooltip-format": "Open calculator"
-  // },
-  // Windows VM
-  "custom/windowsvm": {
-    "format": "",
-    "on-click": "~/.config/ml4w/scripts/launchvm.sh",
-    "tooltip": false
-  },
-  // Spotify / Media Player
-  "mpris": {
-    "format": "{player_icon} {dynamic}",
-    "format-paused": "{status_icon} <i>{dynamic}</i>",
-    "player-icons": {
-      "default": "▶",
-      "spotify": "",
-      "mpv": "🎵",
-      "firefox": "",
-      "chromium": "",
-      "brave": "🦁"
-    },
-    "status-icons": {
-      "paused": "⏸"
-    },
-    "max-length": 33,
-    "interval": 1,
-    // "ignored-players": ["firefox", "chromium", "brave"], // Commented out to allow YouTube
-    // CONTROLS
-    "on-click": "playerctl play-pause",
-    "on-click-right": "playerctl next",
-    "on-click-middle": "playerctl previous",
-    // SCROLL TO SWITCH PLAYERS (Requires playerctld)
-    "on-scroll-up": "playerctld shift",
-    "on-scroll-down": "playerctld unshift",
-    "tooltip-format": "{player} ({status})\nArtist: {artist}\nAlbum: {album}\nTitle: {title}"
+  "custom/calculator": {
+    "format": "",
+    "on-click": "qalculate-gtk",
+    "tooltip-format": "Open calculator"
   },
   // Rofi Application Launcher
   "custom/appmenu": {
     // START APPS LABEL
     "format": "Apps",
     // END APPS LABEL
-    "on-click": "sleep 0.2;pkill rofi || rofi -show drun -replace",
+    "on-click": "~/.config/hypr/scripts/launcher.sh",
     "on-click-right": "~/.config/hypr/scripts/keybindings.sh",
     "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings"
   },
   // Rofi Application Launcher
   "custom/appmenuicon": {
-    "format": "",
+    "format": "",
     "on-click": "sleep 0.2;rofi -show drun -replace",
     "on-click-right": "~/.config/hypr/scripts/keybindings.sh",
     "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings"
@@ -181,23 +186,22 @@
   // Power Menu
   "custom/exit": {
     "format": "",
-    "on-click": "~/.config/ml4w/scripts/wlogout.sh",
-    "on-click-right": "hyprlock",
-    "tooltip-format": "Left: Power menu\nRight: Lock screen"
+    "on-click": "qs ipc call power toggle",
+    "tooltip-format": "Open Power Menu"
   },
   // SwayNC
   "custom/notification": {
     "tooltip-format": "Left: Notifications\nRight: Do not disturb",
     "format": "{icon}",
     "format-icons": {
-      "notification": "<span rise='8pt'><span foreground='red'><sup></sup></span></span>",
-      "none": "",
-      "dnd-notification": "<span rise='8pt'><span foreground='red'><sup></sup></span></span>",
-      "dnd-none": "",
-      "inhibited-notification": "<span rise='8pt'><span foreground='red'><sup></sup></span></span>",
-      "inhibited-none": "",
-      "dnd-inhibited-notification": "<span rise='8pt'><span foreground='red'><sup></sup></span></span>",
-      "dnd-inhibited-none": ""
+      "notification": "notifications_active",
+      "none": "notifications",
+      "dnd-notification": "notifications_active",
+      "dnd-none": "notifications_paused",
+      "inhibited-notification": "notification_important",
+      "inhibited-none": "notification_important",
+      "dnd-inhibited-notification": "notification_off",
+      "dnd-inhibited-none": "notifications_off"
     },
     "return-type": "json",
     "exec-if": "which swaync-client",
@@ -206,12 +210,13 @@
     "on-click-right": "swaync-client -d -sw",
     "escape": true
   },
-  // Hyprshade
+  // Hyprsunset
   "custom/hyprshade": {
     "format": "",
     "tooltip-format": "Toggle Screen Shader",
-    "on-click": "sleep 0.5; ~/.config/hypr/scripts/hyprshade.sh",
-    "on-click-right": "sleep 0.5; ~/.config/hypr/scripts/hyprshade.sh rofi"
+    "on-click": "sleep 0.5; ~/.config/ml4w/scripts/ml4w-toggle-hyprsunset",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // Hypridle inhibitor
   "custom/hypridle": {
@@ -221,7 +226,9 @@
     "exec-on-event": true,
     "interval": 60,
     "exec": "~/.config/hypr/scripts/hypridle.sh status",
-    "on-click": "~/.config/hypr/scripts/hypridle.sh toggle"
+    "on-click": "~/.config/hypr/scripts/hypridle.sh toggle",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // Keyboard State
   "keyboard-state": {
@@ -231,7 +238,9 @@
     "format-icons": {
       "locked": "",
       "unlocked": ""
-    }
+    },
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // System tray
   "tray": {
@@ -240,43 +249,56 @@
   },
   // Clock
   "clock": {
-    "format": "{:%H:%M %a %Od.%Om.%y}",
-    "on-click": "flatpak run com.ml4w.calendar",
+    "format": "{:%H:%M %a}",
+    "on-click": "qs ipc call calendar toggle",
     "timezone": "",
     "tooltip": false
   },
   // System
   "custom/system": {
     "format": "",
-    "tooltip": false
+    "tooltip": false,
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // CPU
   "cpu": {
-    "format": "/  {usage}% ",
-    "on-click": "~/.config/ml4w/settings/system-monitor.sh"
+    "format": "/ C {usage}% ",
+    "on-click": "~/.config/ml4w/settings/system-monitor.sh",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // Memory
   "memory": {
-    "format": "/ 󰘚 {}% ",
-    "on-click": "~/.config/ml4w/settings/system-monitor.sh"
-  },
-  // GPU Usage
-  "custom/gpu": {
-    "format": "/󰢮 {}%",
-    "exec": "~/.config/ml4w/settings/gpu_monitor.sh",
-    "return-type": "json",
-    "interval": 5,
-    "on-click": "alacritty -e nvtop"
+    "format": "/ M {}% ",
+    "on-click": "~/.config/ml4w/settings/system-monitor.sh",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // Harddisc space used
   "disk": {
     "interval": 30,
-    "format": "󰋊 {percentage_used}% ",
+    "format": "D {percentage_used}% ",
     "path": "/",
-    "on-click": "~/.config/ml4w/settings/system-monitor.sh"
+    "on-click": "~/.config/ml4w/settings/system-monitor.sh",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
+  },
+  // GPU
+  "custom/gpu": {
+    "exec": "~/.config/waybar/gpu.sh",
+    "return-type": "json",
+    "format": "/ G {}% ",
+    "interval": 5,
+    "hide-empty-text": true,
+    "on-click": "~/.config/ml4w/settings/system-monitor.sh",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   "hyprland/language": {
-    "format": "/ K {short}"
+    "format": "/ K {short}",
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // Group Hardware
   "group/hardware": {
@@ -290,8 +312,9 @@
       "custom/system",
       "disk",
       "cpu",
+      "memory",
       "custom/gpu",
-      "memory"
+      "hyprland/language"
     ]
   },
   // Group Tools
@@ -306,7 +329,8 @@
       "custom/tools",
       "custom/cliphist",
       "custom/hypridle",
-      "custom/hyprshade"
+      "custom/hyprshade",
+      "power-profiles-daemon"
     ]
   },
   // Group Links
@@ -334,19 +358,20 @@
   // Network
   "network": {
     "format": "{ifname}",
-    "format-wifi": " {essid} ({signalStrength}%)",
-    "format-ethernet": "󰈀  {ifname}",
+    "format-wifi": " {signalStrength}%",
+    "format-ethernet": "  {ifname}",
     "format-disconnected": "Disconnected ⚠",
-    "tooltip-format": "󰈀  {ifname} via {gwaddri}",
+    "tooltip-format": " {ifname} via {gwaddri}",
     "tooltip-format-wifi": "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
-    "tooltip-format-ethernet": "󰈀  {ifname}\nIP: {ipaddr}\n up: {bandwidthUpBits} down: {bandwidthDownBits}",
+    "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\n up: {bandwidthUpBits} down: {bandwidthDownBits}",
     "tooltip-format-disconnected": "Disconnected",
     "max-length": 50,
     "on-click": "~/.config/ml4w/settings/networkmanager.sh",
-    "on-click-right": "~/.config/ml4w/scripts/nm-applet.sh toggle"
+    "on-click-right": "~/.config/ml4w/scripts/ml4w-toggle-nmapplet toggle",
   },
   // Battery
   "battery": {
+    "interval": 1,
     "states": {
       // "good": 95,
       "warning": 30,
@@ -376,7 +401,9 @@
       "performance": "",
       "balanced": "",
       "power-saver": ""
-    }
+    },
+    "on-scroll-up": "true",
+    "on-scroll-down": "true"
   },
   // Pulseaudio
   "pulseaudio": {
@@ -404,12 +431,15 @@
   },
   // Bluetooth
   "bluetooth": {
-    "format": " {status}",
-    "format-disabled": "",
-    "format-off": "",
-    "interval": 30,
-    "on-click": "blueman-manager",
-    "format-no-controller": ""
+  "format": " {status}",
+  "format-disabled": "",
+  "format-off": "",
+  "interval": 30,
+  "on-click": "sleep 0.1 && ~/.config/ml4w/settings/bluetooth.sh",
+  "tooltip-format-connected": "Connected devices: {num_connections} connected\n\n{device_enumerate}",
+  "tooltip-format-enumerate-connected": "{device_alias}",
+  "tooltip-format-enumerate-connected-battery": "{device_alias}\t| Battery life: {device_battery_percentage}%",
+  "format-no-controller": ""
   },
   // Other
   "user": {

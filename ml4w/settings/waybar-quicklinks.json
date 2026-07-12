@@ -11,12 +11,12 @@ You can reload waybar with SUPER + SHIFT + B
     },
     "custom/quicklink_filemanager": {
         "format": "",
-        "on-click": "~/.config/ml4w/settings/filemanager.sh",
+        "on-click": "~/.config/ml4w/settings/filemanager",
         "tooltip-format": "Open Filemanager"
     },
     "custom/quicklink_email": {
         "format": "",
-        "on-click": "~/.config/ml4w/settings/email.sh",
+        "on-click": "~/.config/ml4w/settings/email",
         "tooltip-format": "Open Email Client"
     },
     "custom/quicklink_chromium": {
@@ -56,8 +56,8 @@ Add your quicklinks in your desired order to the status bar
         "orientation": "horizontal",
         "modules": [
 
-            "custom/quicklink_firefox",
-            "custom/quicklink_calculator",
+            "custom/quicklink_browser",
+            "custom/quicklink_email",
             "custom/quicklink_filemanager",
 
 /*

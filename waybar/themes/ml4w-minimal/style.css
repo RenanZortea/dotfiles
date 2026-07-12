@@ -6,14 +6,8 @@
  *    \_/\_/ \__,_|\__, |_.__/ \__,_|_|    |____/ \__|\__, |_|\___|
  *                 |___/                              |___/
  *
- * by Stephan Raabe (2023)
  * -----------------------------------------------------
 */
-
-/* -----------------------------------------------------
- * Import Pywal colors
- * ----------------------------------------------------- */
-/* @import 'style-light.css'; */
 @define-color backgroundlight #FFFFFF;
 @define-color backgrounddark #FFFFFF;
 @define-color workspacesbackground1 #FFFFFF;
@@ -29,7 +23,7 @@
  * ----------------------------------------------------- */
 
 * {
-    font-family: "Fira Sans semibold", FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-family: "Fira Sans Semibold", "Font Awesome 7 Free", "Font Awesome 7 Brands", "Font Awesome 6 Free", "Font Awesome 6 Brands", FontAwesome, "Material Icons", Roboto, Helvetica, Arial, sans-serif;
     border: none;
     border-radius: 0px;
 }
@@ -200,7 +194,7 @@ window#waybar.empty #window {
 
 #custom-chatgpt {
     margin-right: 10px;
-    background-image: url("../assets/ai-icon-20.png");
+    background-image: url("../../assets/ai-icon-20.png");
     background-repeat: no-repeat;
     background-position: center;
     padding-right: 23px;
@@ -213,7 +207,7 @@ window#waybar.empty #window {
 
 #custom-ml4w-welcome {
     margin-right: 12px;
-    background-image: url("../assets/ml4w-icon.svg");
+    background-image: url("../../assets/ml4w-icon.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -222,7 +216,7 @@ window#waybar.empty #window {
 
 #custom-ml4w-hyprland-settings {
     margin-right: 12px;
-    background-image: url("../assets/hyprland-icon-20.png");
+    background-image: url("../../assets/hyprland-icon-20.png");
     background-repeat: no-repeat;
     background-position: center;
     padding-right: 16px;
@@ -230,7 +224,7 @@ window#waybar.empty #window {
 
 
 /* -----------------------------------------------------
- * Idle Inhibator
+ * Idle Inhibitor
  * ----------------------------------------------------- */
 
  #idle_inhibitor {
@@ -265,6 +259,7 @@ window#waybar.empty #window {
     margin: 0px 13px 0px 0px;
     padding:0px;
     font-size:20px;
+    font-family: "Material Icons";
     color: @iconcolor;
     opacity: 0.8;
 }
@@ -318,7 +313,7 @@ window#waybar.empty #window {
  * Hardware Group
  * ----------------------------------------------------- */
 
- #disk,#memory,#cpu,#language {
+ #disk,#memory,#cpu,#custom-gpu,#language {
     margin:0px;
     padding:0px;
     font-size:14px;

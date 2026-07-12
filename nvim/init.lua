@@ -16,7 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Set up plugins
 require("lazy").setup({
 	require("plugins.colortheme"),
-	-- require("plugins.render_markdown"),
+	require("plugins.render_markdown"),
 	require("plugins.markdown_preview"),
 	require("plugins.ollama"),
 	require("plugins.treesitter"),

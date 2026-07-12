@@ -1,36 +1,48 @@
 # -----------------------------------------------------
-# CONFIGURAÇÃO DOS PLUGINS (Instalados via Pacman)
+# CUSTOMIZATION
 # -----------------------------------------------------
-
-# 1. zsh-completions (Para autocompletar com Tab)
-fpath+=(/usr/share/zsh/plugins/zsh-completions/src)
-autoload -U compinit && compinit
-
-# 2. zsh-autosuggestions (Sugestões em cinza)
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-# 3. zsh-syntax-highlighting (Colorir comandos)
-# IMPORTANTE: Esta deve ser a ÚLTIMA linha de plugin a ser carregada
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+POSH=agnoster
 
 # -----------------------------------------------------
-# Prompt (Oh My Posh)
+# oh-myzsh themes: https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 # -----------------------------------------------------
-# Isto só funciona após 'sudo pacman -S oh-my-posh'
-eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/EDM115-newline.omp.json)"
-
+# ZSH_THEME=robbyrussell
 
 # -----------------------------------------------------
-# FZF (Busca no histórico com CTRL+R)
+# oh-my-zsh plugins
 # -----------------------------------------------------
-# Isto só funciona após 'sudo pacman -S fzf'
+plugins=(
+    git
+    sudo
+    web-search
+    archlinux
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    fast-syntax-highlighting
+    copyfile
+    copybuffer
+    dirhistory
+)
+
+# Set-up oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+# -----------------------------------------------------
+# Set-up FZF key bindings (CTRL R for fuzzy history finder)
+# -----------------------------------------------------
 source <(fzf --zsh)
 
-# -----------------------------------------------------
-# Configuração do Histórico
-# -----------------------------------------------------
+# zsh history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory
+
+# -----------------------------------------------------
+# Prompt
+# -----------------------------------------------------
+eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
+# eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/EDM115-newline.omp.json)"
+
+# Shipped Theme
+# eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/agnoster.omp.json)"
