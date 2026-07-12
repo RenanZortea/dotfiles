@@ -31,7 +31,7 @@
         "pulseaudio",
         //"backlight",
         "bluetooth",
-        "network",
+        //"network",
         "battery",
         "group/hardware",
         "group/tools",
