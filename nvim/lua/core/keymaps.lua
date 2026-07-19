@@ -82,3 +82,33 @@ vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Open float
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
 vim.keymap.set("n", "<leader>e", "<cmd>Explore<CR>", opts)
+
+-- K: documentation for the word under the cursor.
+--
+-- Neovim's default K falls through to 'keywordprg' (:Man) whenever no LSP
+-- client is attached, which throws `executable not found: "man"` on systems
+-- without man-db. Route each buffer to the source that can actually answer.
+vim.keymap.set("n", "K", function()
+	local bufnr = vim.api.nvim_get_current_buf()
+
+	for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+		if client:supports_method("textDocument/hover") then
+			return vim.lsp.buf.hover()
+		end
+	end
+
+	-- Vim's own docs are the right answer for its own filetypes.
+	local ft = vim.bo.filetype
+	if ft == "vim" or ft == "help" or ft == "lua" then
+		local word = vim.fn.expand("<cword>")
+		if vim.fn.empty(word) == 0 and pcall(vim.cmd.help, word) then
+			return
+		end
+	end
+
+	if vim.fn.executable("man") == 1 then
+		return vim.cmd.Man(vim.fn.expand("<cword>"))
+	end
+
+	vim.notify("No hover: no LSP attached to this buffer", vim.log.levels.WARN)
+end, { desc = "Hover documentation (LSP, else :help)" })

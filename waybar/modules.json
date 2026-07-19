@@ -254,6 +254,59 @@
     "timezone": "",
     "tooltip": false
   },
+  // Multi-mode clock (custom). Scroll to cycle modes; state in hexclock.mode.
+  "custom/hexclock": {
+    "exec": "~/.config/waybar/hexclock.sh show",
+    "interval": 1,
+    "signal": 8,
+    "format": "{}",
+    "on-click": "qs ipc call calendar toggle",
+    "on-scroll-up": "~/.config/waybar/hexclock.sh next",
+    "on-scroll-down": "~/.config/waybar/hexclock.sh prev",
+    "tooltip": false
+  },
+  // Hebrew (Jewish) calendar — hover for parasha + upcoming holidays
+  "custom/jewishcal": {
+    "exec": "~/.local/share/waybar-cal/venv/bin/python ~/.config/waybar/jewishcal.py",
+    "return-type": "json",
+    "interval": 1800,
+    "format": "{}",
+    "on-click": "qs ipc call calendar toggle",
+    "tooltip": true
+  },
+  // Sunrise — time shown in the current clock mode (signal 8 = clock scroll)
+  "custom/sunrise": {
+    "exec": "~/.local/share/waybar-cal/venv/bin/python ~/.config/waybar/suntimes.py sunrise",
+    "return-type": "json",
+    "interval": 60,
+    "signal": 8,
+    "format": "{}",
+    "tooltip": true
+  },
+  // Sunset — time shown in the current clock mode (signal 8 = clock scroll)
+  "custom/sunset": {
+    "exec": "~/.local/share/waybar-cal/venv/bin/python ~/.config/waybar/suntimes.py sunset",
+    "return-type": "json",
+    "interval": 60,
+    "signal": 8,
+    "format": "{}",
+    "tooltip": true
+  },
+  // Clock group — main clock visible; hover reveals sun times + Hebrew date
+  "group/clock": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "children-class": "clock-drawer",
+      "transition-left-to-right": true
+    },
+    "modules": [
+      "custom/hexclock",
+      "custom/sunrise",
+      "custom/sunset",
+      "custom/jewishcal"
+    ]
+  },
   // System
   "custom/system": {
     "format": "",

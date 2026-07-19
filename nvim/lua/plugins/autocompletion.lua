@@ -94,11 +94,10 @@ return { -- Autocompletion
 				--  This will expand snippets if the LSP sent a snippet.
 				["<C-f>"] = cmp.mapping.confirm({ select = true }),
 
-				-- If you prefer more traditional completion keymaps,
-				-- you can uncomment the following lines
-				--['<CR>'] = cmp.mapping.confirm { select = true },
-				--['<Tab>'] = cmp.mapping.select_next_item(),
-				--['<S-Tab>'] = cmp.mapping.select_prev_item(),
+				-- Enter accepts the highlighted item. select = false means it only
+				-- confirms when you've actually moved onto an item (Tab / <C-n> / arrows);
+				-- with nothing selected it falls through to a normal newline.
+				["<CR>"] = cmp.mapping.confirm({ select = false }),
 
 				-- Manually trigger a completion from nvim-cmp.
 				--  Generally you don't need this, because nvim-cmp will display

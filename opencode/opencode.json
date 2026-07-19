@@ -1,0 +1,31 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "qwen3-coder-6gb:latest": {
+          "name": "Qwen3 Coder 4B (6GB tuned, 100% GPU)"
+        },
+        "kirito1/qwen3-coder:4b": {
+          "name": "Qwen3 Coder 4B"
+        },
+        "gemma4:e4b": {
+          "name": "Gemma 4 E4B"
+        },
+        "gemma4:e2b": {
+          "name": "gemma4:e2b"
+        },
+        "qwen3:8b": {
+          "name": "Qwen3 8B"
+        }
+      }
+    }
+  },
+  "model": "ollama/qwen3-coder-6gb:latest",
+  "small_model": "ollama/qwen3-coder-6gb:latest"
+}

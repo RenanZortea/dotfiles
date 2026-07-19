@@ -1,0 +1,9 @@
+FROM kirito1/qwen3-coder:4b
+
+# 16k is opencode's documented floor for reliable tool calls.
+PARAMETER num_ctx 16384
+
+# Ollama's VRAM estimator is conservative on a 6GB card and spills ~18% of
+# layers to CPU at this context even though they fit. Forcing all layers on
+# gives 100% GPU. Verified: 3.5GB resident against ~4.4GB free VRAM.
+PARAMETER num_gpu 99

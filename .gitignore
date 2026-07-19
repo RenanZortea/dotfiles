@@ -26,6 +26,7 @@
 !/ml4w
 !/nvim
 !/ohmyposh
+!/opencode
 !/rofi
 !/swaync
 !/tmux
@@ -41,3 +42,6 @@
 
 # tpm installs these; do not vendor them
 /tmux/plugins/
+
+# npm installs these for the opencode provider sdk; do not vendor them
+/opencode/node_modules/

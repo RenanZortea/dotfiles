@@ -170,19 +170,9 @@ return {
 				},
 			},
 
-			-- Rust Configuration
-			rust_analyzer = {
-				settings = {
-					["rust-analyzer"] = {
-						lru = {
-							capacity = 16,
-						},
-						cargo = {
-							allFeatures = true,
-						},
-					},
-				},
-			},
+			-- NOTE: rust_analyzer is deliberately absent here. rustaceanvim
+			-- (plugins/rustaceanvim.lua) owns the Rust client and starts it itself;
+			-- configuring it through lspconfig too would attach a second server.
 
 			-- Other Servers
 			ts_ls = {}, -- tsserver is deprecated
@@ -251,44 +241,45 @@ return {
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, {
 			"stylua", -- Used to format Lua code
+			"rust-analyzer", -- installed for rustaceanvim, but never enabled via lspconfig
 		})
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
+		-- mason-lspconfig v2 dropped `handlers` and instead calls `vim.lsp.enable()` on
+		-- every installed server. Per-server config is therefore registered with
+		-- `vim.lsp.config()`, and capabilities are broadcast via the "*" wildcard.
+		vim.lsp.config("*", { capabilities = capabilities })
+		for server_name, server in pairs(servers) do
+			vim.lsp.config(server_name, server)
+		end
+
 		require("mason-lspconfig").setup({
-			handlers = {
-				function(server_name)
-					local server = servers[server_name] or {}
-					-- This handles overriding only values explicitly passed
-					-- by the server configuration above. Useful when disabling
-					-- certain features of an LSP (for example, turning off formatting for tsserver)
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					require("lspconfig")[server_name].setup(server)
-				end,
-			},
+			-- rustaceanvim starts and owns the Rust client itself; letting mason enable
+			-- it here as well is what attaches a second rust-analyzer to every buffer.
+			automatic_enable = { exclude = { "rust_analyzer" } },
 		})
 
-		-- Toggle LSP on/off (Corrected to handle C and Rust)
-		vim.keymap.set("n", "<leader>lo", function()
-			-- Get ALL clients
-			local clients = vim.lsp.get_clients()
-			local killed = false
+		-- Heavy-LSP switch. State is persisted (see core/lsp_switch.lua) and read by
+		-- each spawner at attach time, so "off" survives a restart. The old version
+		-- inferred state from whether a client happened to be running, which meant
+		-- a not-yet-indexed server read as "off" and :LspStart could not revive
+		-- rust-analyzer anyway, since rustaceanvim owns that client.
+		local switch = require("core.lsp_switch")
 
-			for _, client in ipairs(clients) do
-				-- Check for Rust OR Clangd
-				if client.name == "rust_analyzer" or client.name == "rust-analyzer" or client.name == "clangd" then
-					vim.lsp.stop_client(client.id, true)
-					killed = true
+		vim.keymap.set("n", "<leader>lo", switch.toggle, { desc = "[L]SP: t[O]ggle heavy servers (persistent)" })
+		vim.keymap.set("n", "<leader>ls", switch.status, { desc = "[L]SP: [S]tatus of heavy servers" })
+
+		-- Refuse to start governed servers while the switch is off.
+		vim.api.nvim_create_autocmd("LspAttach", {
+			group = vim.api.nvim_create_augroup("HeavyLspSwitch", { clear = true }),
+			callback = function(event)
+				local client = vim.lsp.get_client_by_id(event.data.client_id)
+				if client and switch.is_heavy(client.name) and not switch.is_enabled() then
+					vim.schedule(function()
+						vim.lsp.stop_client(client.id, true)
+					end)
 				end
-			end
-
-			if killed then
-				-- Clear the red error text (diagnostics) for the current buffer immediately
-				vim.diagnostic.reset(nil, 0)
-				print("💀 Heavy LSPs (Rust/C) Stopped")
-			else
-				vim.cmd("LspStart")
-				print("🟢 LSPs Started")
-			end
-		end, { desc = "Toggle Heavy LSPs (Rust/C)" })
+			end,
+		})
 	end,
 }

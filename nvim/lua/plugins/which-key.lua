@@ -11,6 +11,10 @@ return {
 			{ "<leader>s", group = "session" },
 			{ "<leader>f", group = "find" },
 			{ "<leader>g", group = "git" },
+			{ "<leader>k", group = "knowledge (ask the compiler)" },
+			{ "<leader>l", group = "lsp" },
+			{ "<leader>r", group = "rust" },
+			{ "<leader>t", group = "toggle" },
 		},
 	},
 

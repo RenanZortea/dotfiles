@@ -1,0 +1,24 @@
+# -----------------------------------------------------
+# OPENCLAW
+# -----------------------------------------------------
+
+# One-shot agent turn. Works with or without piped stdin.
+#   oc "what changed in this repo?"
+#   rg --files -g '*.rs' | oc "which is the main file?"
+# --agent picks the session (required); --local runs embedded, no Gateway needed.
+# OpenClaw prints run/policy chatter on stdout, so it needs filtering, not just 2>/dev/null.
+_oc_clean() {
+  grep -vE '\[agents/tool-policy\]|\[plugins\]|^\[agent\] run .* ended with stopReason'
+}
+
+oc() {
+  local question="$*"
+  if [ -t 0 ]; then
+    openclaw agent --local --agent main -m "$question" 2>/dev/null | _oc_clean
+  else
+    {
+      [ -n "$question" ] && printf '%s\n\n' "$question"
+      cat
+    } | openclaw agent --local --agent main --message-file /dev/stdin 2>/dev/null | _oc_clean
+  fi
+}
